@@ -29,7 +29,7 @@ const ListSearch: FC = () => {
     <div>
       <Search
         allowClear
-        placeholder="请输入关键词2"
+        placeholder="请输入关键词哇！"
         value={value}
         onChange={handleValue}
         onSearch={handleSearch}
