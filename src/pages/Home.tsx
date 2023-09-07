@@ -1,9 +1,16 @@
 import React, { FC } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Typography } from "antd";
 import { MANAGE_INDEX_PATHNAME } from "../router";
 import styles from "./Home.module.scss";
+import axios from "axios";
 const Home: FC = () => {
+  // useEffect(() => {
+  //   axios
+  //     .get("https://mock.apifox.cn/m1/3240899-0-default/user")
+  //     .then((res) => console.log("axios-lpg", res));
+  // }, []);
+
   const nav = useNavigate();
   const { Title, Paragraph } = Typography;
   function deng() {

@@ -36,7 +36,7 @@ const ListPage: FC<PropsType> = (props: PropsType) => {
     serachParms.set(LIST_PAGE_SIZE_PARM_KEY, pageSize.toString());
     nav({
       pathname,
-      search: serachParms.toString(),
+      search: serachParms.toString(), //除了page和pagesize之外，其他url参数是带着的，如keyword
     });
   }
   return (

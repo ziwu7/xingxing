@@ -2,37 +2,41 @@ import React, { FC, useState } from "react";
 import QuestionCard from "../../components/QuestionCard";
 import styles from "./common.module.scss";
 // import { produce } from "immer";
-import { Typography } from "antd";
-import { useTitle } from "ahooks";
+import { Typography, Spin } from "antd";
+import { useRequest, useTitle } from "ahooks";
 import ListSearch from "../../components/ListSearch";
-const rawQuestionList = [
-  {
-    _id: "q1", //_id用这个是因为后端moogodb用的这个，方便统一
-    title: "wen1",
-    isPublished: true,
-    isStar: true,
-    answerCount: 5,
-    createAt: "3月10日 10:22",
-  },
-  {
-    _id: "q2",
-    title: "wen2",
-    isPublished: false,
-    isStar: false,
-    answerCount: 7,
-    createAt: "3月20日 19:32",
-  },
-  {
-    _id: "q3",
-    title: "wen3",
-    isPublished: true,
-    isStar: true,
-    answerCount: 3,
-    createAt: "3月30日 12:22",
-  },
-];
+import useLoadQuestionListData from "../../hooks/useLoadQuestionListData";
+// const rawQuestionList = [
+//   {
+//     _id: "q1", //_id用这个是因为后端moogodb用的这个，方便统一
+//     title: "wen1",
+//     isPublished: true,
+//     isStar: true,
+//     answerCount: 5,
+//     createAt: "3月10日 10:22",
+//   },
+//   {
+//     _id: "q2",
+//     title: "wen2",
+//     isPublished: false,
+//     isStar: false,
+//     answerCount: 7,
+//     createAt: "3月20日 19:32",
+//   },
+//   {
+//     _id: "q3",
+//     title: "wen3",
+//     isPublished: true,
+//     isStar: true,
+//     answerCount: 3,
+//     createAt: "3月30日 12:22",
+//   },
+// ];
 const List: FC = () => {
-  const [questionList, setquestionList] = useState(rawQuestionList);
+  const { data = {}, loading, error } = useLoadQuestionListData();
+  const { list = [], total = 0 } = data;
+
+  // const [questionList, setquestionList] = useState(rawQuestionList);
   const { Title } = Typography;
   useTitle("我的问卷");
   // const add = () => {
@@ -83,8 +87,10 @@ const List: FC = () => {
         </div>
       </div>
       <div className={styles.content}>
-        {questionList.length > 0 &&
-          questionList.map((question) => {
+        <div style={{ textAlign: "center" }}>{loading && <Spin />}</div>
+        {!loading &&
+          list.length > 0 &&
+          list.map((question: any) => {
             const { _id } = question;
             return <QuestionCard key={_id} {...question} />;
           })}

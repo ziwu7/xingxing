@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <Edit />,
       },
       {
-        path: "stat/:id", //兜底写在最后
+        path: "stat/:_id", //兜底写在最后
         element: <Stat />,
       },
     ],
