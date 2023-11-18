@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ComponentPropsType } from "../../components/QuestionComponents";
+import { act } from "react-dom/test-utils";
 export type ComponentInfoType = {
   fe_id: string; // 后面解释
   title: string;
@@ -53,9 +54,6 @@ export const componentSlice = createSlice({
       const newComponent = action.payload;
       const { selectedId, componentList } = state;
       const index = componentList.findIndex((c) => c.fe_id === selectedId);
-
-      console.log("index", index);
-
       if (index < 0) {
         //当前没组件被选中,新组件增加到最后面
         // state.componentList.concat(newComponent);
@@ -67,9 +65,26 @@ export const componentSlice = createSlice({
       //把新组件设置为被选中状态
       state.selectedId = newComponent.fe_id;
     },
+    //修改组件属性
+    changeComponentProps: (
+      state: ComponentStateType,
+      action: PayloadAction<{ fe_id: string; newProps: ComponentPropsType }>,
+    ) => {
+      const { componentList } = state;
+      const { fe_id, newProps } = action.payload;
+
+      const curComp = componentList.find((c) => c.fe_id === fe_id);
+      if (curComp) {
+        curComp.props = { ...curComp.props, ...newProps }; //用新属性覆盖，不能直接解构newProps赋值，可能newProps只有部分属性不全
+      }
+    },
   },
 });
 
-export const { resetComponents, changeSelectedId, addComponent } =
-  componentSlice.actions;
+export const {
+  resetComponents,
+  changeSelectedId,
+  addComponent,
+  changeComponentProps,
+} = componentSlice.actions;
 export default componentSlice.reducer;
