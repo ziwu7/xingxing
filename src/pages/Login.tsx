@@ -1,13 +1,22 @@
 import React, { FC, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useTitle } from "ahooks";
-import { Space, Typography, Form, Input, Button, Checkbox } from "antd";
+import { useTitle, useRequest } from "ahooks";
+import {
+  Space,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  message,
+} from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import styles from "./Register.module.scss";
 import { Link } from "react-router-dom";
-import { REGISTER_PATHNAME } from "../router";
+import { REGISTER_PATHNAME, MANAGE_INDEX_PATHNAME } from "../router";
 import { useForm } from "antd/es/form/Form";
-
+import { loginService } from "../services/user";
+import { setToken } from "../utils/user-token";
 const USERNAME_KEY = "USERNAME";
 const PASSWORD_KEY = "USERNAME";
 
@@ -31,9 +40,28 @@ const Login: FC = () => {
   const nav = useNavigate();
   const [searchParams] = useSearchParams();
   const { Title } = Typography;
+
+  const { run } = useRequest(
+    async (username: string, password: string) => {
+      const data = await loginService(username, password);
+      return data;
+    },
+    {
+      manual: true,
+      onSuccess(result) {
+        const { token = "" } = result;
+        setToken(token);
+
+        message.success("登录成功！");
+        nav(MANAGE_INDEX_PATHNAME);
+      },
+    },
+  );
+
   const onFinish = (values: any) => {
     const { username, password, remember } = values || {};
     console.log(values);
+    run(username, password);
     if (remember) {
       console.log("记住");
       rememberUser(username, password);

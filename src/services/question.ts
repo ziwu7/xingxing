@@ -38,3 +38,33 @@ export async function getQuestionListService(
 
   return data;
 }
+
+//在问卷列表页，更新单个问卷的属性比如star状态，
+export async function updateQuestionService(
+  id: string,
+  opt: { [key: string]: any },
+): Promise<ResDataType> {
+  const url = `https://mock.apifox.cn/m1/3240899-0-default/question/${id}`; //`http://127.0.0.1:4523/m1/3240899-0-default/question/${id}`; //
+  console.log("updateQuestionService", url);
+  const data = (await axios.patch(url, opt)) as ResDataType;
+  console.log(data);
+
+  return data;
+}
+
+//复制问卷，返回一个id
+export async function duplicateQuestionService(id: string) {
+  const url =
+    "https://mock.apifox.cn/m1/3240899-0-default/question/duplicate/1";
+  console.log("duplicateQuestionService", url);
+  const data = (await axios.post(url, id)) as ResDataType;
+  return data;
+}
+
+//永久删除
+export async function deleteQuestionService(ids: string[]) {
+  const url = "https://mock.apifox.cn/m1/3240899-0-default/question";
+  console.log("duplicateQuestionService", url);
+  const data = (await axios.delete(url, { data: { ids } })) as ResDataType;
+  return data;
+}

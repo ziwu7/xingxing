@@ -23,7 +23,8 @@ function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
   const page = parseInt(serachParms.get(LIST_PAGE_PARM_KEY) || "") || 1;
   const pageSize =
     parseInt(serachParms.get(LIST_PAGE_SIZE_PARM_KEY) || "") || LIST_PAGE_SIZE;
-  const { loading, data, error } = useRequest(
+  const { loading, data, error, refresh } = useRequest(
+    //refresh 导出用于手动执行刷新该请求
     async () => {
       const data = await getQuestionListService({
         keyword,
@@ -35,9 +36,9 @@ function useLoadQuestionListData(opt: Partial<OptionType> = {}) {
       return data;
     },
     {
-      refreshDeps: [serachParms], //刷新依赖项
+      refreshDeps: [serachParms], //刷新依赖项，参数变动时执行刷新
     },
   );
-  return { loading, data, error };
+  return { loading, data, error, refresh };
 }
 export default useLoadQuestionListData;

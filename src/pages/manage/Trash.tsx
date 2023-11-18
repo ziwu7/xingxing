@@ -10,12 +10,18 @@ import {
   Divider,
   Modal,
   Spin,
+  message,
 } from "antd";
-import { useTitle } from "ahooks";
+import { useRequest, useTitle } from "ahooks";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import ListSearch from "../../components/ListSearch";
 import useLoadQuestionListData from "../../hooks/useLoadQuestionListData";
 import ListPage from "../../components/ListPage";
+import {
+  updateQuestionService,
+  deleteQuestionService,
+} from "../../services/question";
+
 // const rawQuestionList = [
 //   {
 //     _id: "q1", //_id用这个是因为后端moogodb用的这个，方便统一
@@ -35,17 +41,51 @@ import ListPage from "../../components/ListPage";
 //   },
 // ];
 const Trash: FC = () => {
+  useTitle("回收站");
   const {
     data = {},
     loading,
     // error,
+    refresh, //在下面恢复的请求成功时再执行刷新
   } = useLoadQuestionListData({ isDeleted: true });
   const { list = [], total = 0 } = data;
-  useTitle("回收站");
+
   const { Title } = Typography;
   const { confirm } = Modal;
   // const [questionList, setquestionList] = useState(rawQuestionList);
   const [selectedIds, setselectedIds] = useState<string[]>([]);
+  //恢复
+  const { run: cover } = useRequest(
+    async () => {
+      for await (const id of selectedIds) {
+        updateQuestionService(id, { isDeleted: false });
+      }
+    },
+    {
+      manual: true,
+      debounceWait: 500, //防止抖动间隔，用于例如点击按钮，短时间内点击很多次也执行1次
+      onSuccess() {
+        message.success("已恢复");
+        refresh(); //成功遍历把selectedIds的多个问卷的恢复设置为（isDeleted: false）时，最后执行refresh刷新重新获取数据
+        setselectedIds([]);
+      },
+    },
+  );
+
+  //永久删除
+  const { run: deleteQuestion } = useRequest(
+    async () => deleteQuestionService(selectedIds),
+    {
+      manual: true,
+      debounceWait: 500,
+      onSuccess() {
+        message.success("已删除");
+        refresh(); //成功遍历把selectedIds的多个问卷的删除时，最后执行refresh刷新重新获取数据
+        setselectedIds([]);
+      },
+    },
+  );
+
   const tableColumns = [
     {
       title: "标题",
@@ -78,10 +118,14 @@ const Trash: FC = () => {
     <>
       <div>
         <Space>
-          <Button type="primary" disabled={selectedIds.length === 0}>
+          <Button
+            type="primary"
+            onClick={cover}
+            disabled={selectedIds.length === 0}
+          >
             恢复
           </Button>
-          <Button danger onClick={del}>
+          <Button danger disabled={selectedIds.length === 0} onClick={del}>
             删除
           </Button>
         </Space>
@@ -107,7 +151,7 @@ const Trash: FC = () => {
       title: "确认彻底删除吗？",
       icon: <ExclamationCircleOutlined />,
       content: "删除后不可找回！",
-      onOk: () => alert(`删除${selectedIds}`),
+      onOk: deleteQuestion,
     });
   }
   return (

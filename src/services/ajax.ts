@@ -1,7 +1,18 @@
 import { message } from "antd";
 import axios from "axios";
+import { getToken } from "../utils/user-token";
 const instance = axios.create({ timeout: 10 * 1000 });
 
+//拦截request，请求头统一加入token
+instance.interceptors.request.use(
+  (config) => {
+    config.headers["Authorization"] = `Bearer ${getToken()}`; //JWT固定格式
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+//拦截response，统一处理error和msg
 instance.interceptors.response.use((res) => {
   const resData = (res.data || {}) as ResType;
   const { errno, data, msg } = resData;
@@ -9,7 +20,7 @@ instance.interceptors.response.use((res) => {
     if (msg) {
       message.error(msg);
     }
-    throw new Error(msg);
+    // throw new Error(msg);
   }
   return data as any;
 });
@@ -22,5 +33,5 @@ export type ResType = {
   msg?: string;
 };
 export type ResDataType = {
-  [key: string]: any;
+  [key: string]: any; //表示key值是一个字符串，value是任意值，并且可有可无。
 };
