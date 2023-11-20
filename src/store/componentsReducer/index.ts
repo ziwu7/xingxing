@@ -1,7 +1,7 @@
 import { produce } from "immer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ComponentPropsType } from "../../components/QuestionComponents";
-import { act } from "react-dom/test-utils";
+import { getNextSelectedId } from "./utils";
 export type ComponentInfoType = {
   fe_id: string; // 后面解释
   title: string;
@@ -11,7 +11,7 @@ export type ComponentInfoType = {
 
 export type ComponentStateType = {
   selectedId: string;
-  componentList: Array<ComponentInfoType>; //ComponentInfoType[]   这样也行
+  componentList: ComponentInfoType[];
 };
 
 const INIT_STATE: ComponentStateType = {
@@ -78,6 +78,19 @@ export const componentSlice = createSlice({
         curComp.props = { ...curComp.props, ...newProps }; //用新属性覆盖，不能直接解构newProps赋值，可能newProps只有部分属性不全
       }
     },
+    //删除画布选中组件
+    removeSelectedComponent: (state: ComponentStateType) => {
+      const removeId = state.selectedId;
+
+      //重新设置selectedId
+      const newSelectedId = getNextSelectedId(removeId, state.componentList);
+      state.selectedId = newSelectedId;
+
+      state.componentList = state.componentList.filter((c) => {
+        if (c.fe_id == removeId) return false;
+        else return true;
+      });
+    },
   },
 });
 
@@ -86,5 +99,6 @@ export const {
   changeSelectedId,
   addComponent,
   changeComponentProps,
+  removeSelectedComponent,
 } = componentSlice.actions;
 export default componentSlice.reducer;
