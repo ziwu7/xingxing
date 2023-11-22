@@ -1,7 +1,9 @@
 import { produce } from "immer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ComponentPropsType } from "../../components/QuestionComponents";
-import { getNextSelectedId } from "./utils";
+import { getNextSelectedId, inserNewComponent } from "./utils";
+import cloneDeep from "lodash.clonedeep";
+import { nanoid } from "nanoid";
 export type ComponentInfoType = {
   fe_id: string; // 后面解释
   title: string;
@@ -14,11 +16,13 @@ export type ComponentInfoType = {
 export type ComponentStateType = {
   selectedId: string;
   componentList: ComponentInfoType[];
+  copiedComponent: ComponentInfoType | null;
 };
 
 const INIT_STATE: ComponentStateType = {
   selectedId: "",
   componentList: [],
+  copiedComponent: null,
 };
 
 export const componentSlice = createSlice({
@@ -54,18 +58,7 @@ export const componentSlice = createSlice({
       action: PayloadAction<ComponentInfoType>,
     ) => {
       const newComponent = action.payload;
-      const { selectedId, componentList } = state;
-      const index = componentList.findIndex((c) => c.fe_id === selectedId);
-      if (index < 0) {
-        //当前没组件被选中,新组件增加到最后面
-        // state.componentList.concat(newComponent);
-        state.componentList = [...componentList, newComponent];
-      } else {
-        //当前有组件被选中,新组件增加到该选中组件后面
-        state.componentList.splice(index + 1, 0, newComponent);
-      }
-      //把新组件设置为被选中状态
-      state.selectedId = newComponent.fe_id;
+      inserNewComponent(state, newComponent);
     },
     //修改组件属性
     changeComponentProps: (
@@ -126,6 +119,20 @@ export const componentSlice = createSlice({
         curComp.isLocked = !curComp.isLocked;
       }
     },
+    //复制选中组件
+    copySelectedComponent: (state: ComponentStateType) => {
+      const { selectedId } = state;
+      const curComp = state.componentList.find((c) => c.fe_id === selectedId);
+      if (!curComp) return;
+      state.copiedComponent = cloneDeep(curComp);
+    },
+    //粘贴已复制的组件
+    pasteCopiedComponent: (state: ComponentStateType) => {
+      const { copiedComponent } = state;
+      if (!copiedComponent) return;
+      copiedComponent.fe_id = nanoid();
+      inserNewComponent(state, copiedComponent);
+    },
   },
 });
 
@@ -137,5 +144,7 @@ export const {
   removeSelectedComponent,
   changeComponentHidden,
   toggleComponentLocked,
+  copySelectedComponent,
+  pasteCopiedComponent,
 } = componentSlice.actions;
 export default componentSlice.reducer;

@@ -32,7 +32,9 @@ function useLoadQuestionData() {
       selectedId = componentList[0].fe_id;
     }
 
-    dispatch(resetComponents({ componentList, selectedId }));
+    dispatch(
+      resetComponents({ componentList, selectedId, copiedComponent: null }),
+    );
   }, [data]);
 
   //监听_id变化才执行

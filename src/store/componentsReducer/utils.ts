@@ -1,4 +1,4 @@
-import { ComponentInfoType } from "./index";
+import { ComponentInfoType, ComponentStateType } from "./index";
 
 export function getNextSelectedId(
   fe_id: string,
@@ -18,4 +18,23 @@ export function getNextSelectedId(
   }
 
   return newSelectedId;
+}
+
+//将action中addComponent的逻辑抽离出来，在pasteCopiedComponent中也用到这个插入组件逻辑
+export function inserNewComponent(
+  state: ComponentStateType,
+  newComponent: ComponentInfoType,
+) {
+  const { selectedId, componentList } = state;
+  const index = componentList.findIndex((c) => c.fe_id === selectedId);
+  if (index < 0) {
+    //当前没组件被选中,新组件增加到最后面
+    // state.componentList.concat(newComponent);
+    state.componentList = [...componentList, newComponent];
+  } else {
+    //当前有组件被选中,新组件增加到该选中组件后面
+    state.componentList.splice(index + 1, 0, newComponent);
+  }
+  //把新组件设置为被选中状态
+  state.selectedId = newComponent.fe_id;
 }

@@ -6,9 +6,9 @@ function useGetComponentInfo() {
   const components = useSelector<StateType>(
     (state) => state.components,
   ) as ComponentStateType;
-  const { componentList = [], selectedId } = components;
+  const { componentList = [], selectedId, copiedComponent } = components;
   const selectedComponent = componentList.find((c) => c.fe_id === selectedId);
-  return { componentList, selectedId, selectedComponent }; //？为什么这里对象形式.返回一个对象用于解构出componentList
+  return { componentList, selectedId, selectedComponent, copiedComponent }; //？为什么这里对象形式.返回一个对象用于解构出componentList
 }
 
 export default useGetComponentInfo;
