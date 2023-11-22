@@ -12,7 +12,7 @@ import {
   changeSelectedId,
 } from "../../../store/componentsReducer";
 import { getComponentConfByType } from "../../../components/QuestionComponents/index";
-
+import useBindCanvasKeyPress from "../../../hooks/useBindCanvasKeyPress";
 type PropsType = {
   loading: boolean;
 };
@@ -37,6 +37,7 @@ const EditCanvas: FC<PropsType> = ({ loading }) => {
     dispatch(changeSelectedId(id));
   }
 
+  useBindCanvasKeyPress();
   if (loading) {
     return (
       <div style={{ textAlign: "center", marginTop: "24px" }}>

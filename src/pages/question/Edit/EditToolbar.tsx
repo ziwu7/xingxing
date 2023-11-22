@@ -35,11 +35,9 @@ const EditToolbar: FC = () => {
     dispatch(toggleComponentLocked({ fe_id: selectedId }));
   }
   function copy() {
-    console.log("copy");
     dispatch(copySelectedComponent());
   }
   function paste() {
-    console.log("paste");
     dispatch(pasteCopiedComponent());
   }
 
