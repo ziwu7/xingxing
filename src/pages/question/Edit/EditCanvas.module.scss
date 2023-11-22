@@ -17,6 +17,10 @@
 .selected {
   border-color: #1890ff !important; //用important避免与上面的hover冲突
 }
+.locked {
+  opacity: 0.5; //透明度
+  cursor: not-allowed; //鼠标样式
+}
 
 .component {
   pointer-events: none; //屏蔽鼠标行为不允许操作

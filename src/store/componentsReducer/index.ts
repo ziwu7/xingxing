@@ -6,6 +6,8 @@ export type ComponentInfoType = {
   fe_id: string; // 后面解释
   title: string;
   type: string;
+  isHidden?: boolean;
+  isLocked?: boolean;
   props: ComponentPropsType;
 };
 
@@ -82,7 +84,7 @@ export const componentSlice = createSlice({
     removeSelectedComponent: (state: ComponentStateType) => {
       const removeId = state.selectedId;
 
-      //重新设置selectedId
+      //重新设置selectedId 先重置selectedId再操作下面的删除组件，否则顺序会乱
       const newSelectedId = getNextSelectedId(removeId, state.componentList);
       state.selectedId = newSelectedId;
 
@@ -90,6 +92,39 @@ export const componentSlice = createSlice({
         if (c.fe_id == removeId) return false;
         else return true;
       });
+    },
+    //隐藏/显示画布选中组件
+    changeComponentHidden: (
+      state: ComponentStateType,
+      action: PayloadAction<{ fe_id: string; isHidden: boolean }>,
+    ) => {
+      const { fe_id, isHidden } = action.payload;
+
+      //重新设置selectedId,先重置selectedId再操作下面的隐藏组件，否则顺序会乱
+      let newSelectedId = "";
+      if (isHidden) {
+        //隐藏
+        newSelectedId = getNextSelectedId(fe_id, state.componentList);
+      } else {
+        //显示
+        newSelectedId = fe_id;
+      }
+      state.selectedId = newSelectedId;
+      const curComp = state.componentList.find((c) => c.fe_id === fe_id);
+      if (curComp) {
+        curComp.isHidden = isHidden;
+      }
+    },
+    //锁定/解锁组件isLocked
+    toggleComponentLocked: (
+      state: ComponentStateType,
+      action: PayloadAction<{ fe_id: string }>,
+    ) => {
+      const { fe_id } = action.payload;
+      const curComp = state.componentList.find((c) => c.fe_id === fe_id);
+      if (curComp) {
+        curComp.isLocked = !curComp.isLocked;
+      }
     },
   },
 });
@@ -100,5 +135,7 @@ export const {
   addComponent,
   changeComponentProps,
   removeSelectedComponent,
+  changeComponentHidden,
+  toggleComponentLocked,
 } = componentSlice.actions;
 export default componentSlice.reducer;
