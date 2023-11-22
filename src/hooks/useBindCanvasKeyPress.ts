@@ -1,10 +1,10 @@
 import { useKeyPress } from "ahooks";
 import {
   removeSelectedComponent,
-  changeComponentHidden,
-  toggleComponentLocked,
   copySelectedComponent,
   pasteCopiedComponent,
+  selectPreComponent,
+  selectNextComponent,
 } from "../store/componentsReducer";
 import { useDispatch } from "react-redux";
 function isActiveElementValid() {
@@ -31,6 +31,16 @@ function useBindCanvasKeyPress() {
   useKeyPress(["ctrl.v", "meta.v"], () => {
     if (!isActiveElementValid()) return;
     dispatch(pasteCopiedComponent());
+  });
+  //向上选中组件
+  useKeyPress(["uparrow"], () => {
+    if (!isActiveElementValid()) return;
+    dispatch(selectPreComponent());
+  });
+  //向下选中组件
+  useKeyPress(["downarrow"], () => {
+    if (!isActiveElementValid()) return;
+    dispatch(selectNextComponent());
   });
 }
 
