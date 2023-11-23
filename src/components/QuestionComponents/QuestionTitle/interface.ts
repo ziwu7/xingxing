@@ -1,3 +1,4 @@
+//属性和默认属性
 export type QuestionTitlePropsType = {
   text?: string;
   level?: 1 | 2 | 3 | 4 | 5;

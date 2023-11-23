@@ -1,3 +1,4 @@
+//属性和默认属性
 export type QuestionInputPropsType = {
   title?: string;
   placeholder?: string;
