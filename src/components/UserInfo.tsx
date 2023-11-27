@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LOGIN_PATHNAME } from "../router";
+import { LOGIN_PATHNAME, MANAGE_INDEX_PATHNAME } from "../router";
 // import { getUserInfoService } from "../services/user";
 // import { useRequest } from "ahooks";
 import { UserOutlined } from "@ant-design/icons";
@@ -9,6 +9,7 @@ import { removeToken } from "../utils/user-token";
 import useGetUserInfo from "../hooks/useGetUserInfo";
 import { useDispatch } from "react-redux";
 import { logoutReducer } from "../store/userReducer";
+
 const UserInfo: FC = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -29,6 +30,10 @@ const UserInfo: FC = () => {
         <UserOutlined />
         {nickname}
       </span>
+      <Link to={MANAGE_INDEX_PATHNAME} style={{ color: "#e8e8e8" }}>
+        {" "}
+        我的问卷
+      </Link>
       <Button type="link" onClick={logout}>
         退出
       </Button>
