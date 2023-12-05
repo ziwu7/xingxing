@@ -89,7 +89,7 @@ export const componentSlice = createSlice({
     //隐藏/显示画布选中组件
     changeComponentHidden: (
       state: ComponentStateType,
-      action: PayloadAction<{ fe_id: string; isHidden: boolean }>,
+      action: PayloadAction<{ fe_id: string; isHidden: boolean }>, //这里是个类型不是对象，所以大括号里用分号不是逗号
     ) => {
       const { fe_id, isHidden } = action.payload;
 
@@ -151,6 +151,14 @@ export const componentSlice = createSlice({
       if (selectedIndex + 1 === componentList.length) return; //最后一个
       state.selectedId = state.componentList[selectedIndex + 1].fe_id;
     },
+    changeComponentTitle: (
+      state: ComponentStateType,
+      action: PayloadAction<{ fe_id: string; title: string }>,
+    ) => {
+      const { fe_id, title } = action.payload;
+      const curComp = state.componentList.find((c) => c.fe_id === fe_id);
+      if (curComp) curComp.title = title;
+    },
   },
 });
 
@@ -166,5 +174,6 @@ export const {
   pasteCopiedComponent,
   selectPreComponent,
   selectNextComponent,
+  changeComponentTitle,
 } = componentSlice.actions;
 export default componentSlice.reducer;
