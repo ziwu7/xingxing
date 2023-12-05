@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { type } from "os";
 
 export type UserStateType = {
   username: string;

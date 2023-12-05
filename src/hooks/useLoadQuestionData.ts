@@ -4,6 +4,7 @@ import { getQuestionService } from "../services/question";
 import { useRequest } from "ahooks";
 import { useDispatch } from "react-redux";
 import { resetComponents } from "../store/componentsReducer";
+import { pageInfoSlice, resetPageInfo } from "../store/pageInfoReducer";
 function useLoadQuestionData() {
   const { _id = "" } = useParams();
   console.log("id", _id);
@@ -24,17 +25,26 @@ function useLoadQuestionData() {
   //监听data数据,把componentList写入redux
   useEffect(() => {
     if (!data) return;
-    const { title = "", componentList = [] } = data;
+    const {
+      title = "",
+      desc = "",
+      js = "",
+      css = "",
+      componentList = [],
+    } = data;
 
     //获取默认的selectedId
     let selectedId = "";
     if (componentList.length > 0) {
       selectedId = componentList[0].fe_id;
     }
-
+    //组件数据存入redux
     dispatch(
       resetComponents({ componentList, selectedId, copiedComponent: null }),
     );
+
+    //设置页面数据存入redux
+    dispatch(resetPageInfo({ title, desc, js, css }));
   }, [data]);
 
   //监听_id变化才执行
