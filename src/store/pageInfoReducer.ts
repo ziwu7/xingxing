@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
 
 export type pageInfoStateType = {
   title: string;
@@ -19,14 +18,22 @@ export const pageInfoSlice = createSlice({
   name: "pageInfo",
   initialState: INIT_STATE,
   reducers: {
+    //重置、初始化页面信息
     resetPageInfo: (
       state: pageInfoStateType,
       action: PayloadAction<pageInfoStateType>,
     ) => {
       return action.payload;
     },
+    //重置页面标题
+    changePageTitle: (
+      state: pageInfoStateType,
+      action: PayloadAction<string>,
+    ) => {
+      state.title = action.payload;
+    },
   },
 });
 
-export const { resetPageInfo } = pageInfoSlice.actions;
+export const { resetPageInfo, changePageTitle } = pageInfoSlice.actions;
 export default pageInfoSlice.reducer;
