@@ -14,7 +14,6 @@ const PageSetting: FC = () => {
   //把表单的数据变化更新到redux
   function handleValuesChange() {
     const newValue = form.getFieldsValue();
-    console.log(newValue);
     dispatch(resetPageInfo(newValue));
   }
   return (
