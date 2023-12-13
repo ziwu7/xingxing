@@ -30,6 +30,7 @@ function useLoadQuestionData() {
       desc = "",
       js = "",
       css = "",
+      isPublished = false, //
       componentList = [],
     } = data;
 
@@ -44,7 +45,7 @@ function useLoadQuestionData() {
     );
 
     //设置页面数据存入redux
-    dispatch(resetPageInfo({ title, desc, js, css }));
+    dispatch(resetPageInfo({ isPublished, title, desc, js, css }));
   }, [data]);
 
   //监听_id变化才执行

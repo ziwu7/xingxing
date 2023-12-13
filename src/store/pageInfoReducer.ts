@@ -5,6 +5,7 @@ export type pageInfoStateType = {
   desc?: string;
   js?: string;
   css?: string;
+  isPublished?: boolean;
 };
 
 const INIT_STATE: pageInfoStateType = {
@@ -12,6 +13,7 @@ const INIT_STATE: pageInfoStateType = {
   desc: "",
   js: "",
   css: "",
+  // isPublished: false, //如果设置了，在stat页加载时会闪一下404效果（http://localhost:3000/question/stat/0）
 };
 
 export const pageInfoSlice = createSlice({
