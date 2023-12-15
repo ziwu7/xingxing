@@ -5,6 +5,7 @@ import { Spin, Result, Button } from "antd";
 import { useTitle } from "ahooks";
 import { useNavigate } from "react-router-dom";
 import styles from "./Index.module.scss";
+import StatHeader from "./StatHeader";
 const Stat: FC = () => {
   const { loading } = useLoadQuestionData();
   const { title, isPublished } = useGetPageInfo();
@@ -44,7 +45,9 @@ const Stat: FC = () => {
 
   return (
     <div className={styles.container}>
-      <div>header</div>
+      <div>
+        <StatHeader />
+      </div>
       <div className={styles["content-wrapper"]}>
         <div className={styles.content}>
           {loading && LoadingElem}
