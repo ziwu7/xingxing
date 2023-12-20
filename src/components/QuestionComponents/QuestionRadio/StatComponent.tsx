@@ -1,18 +1,17 @@
-import React, { FC, PureComponent } from "react";
+import React, { FC, useMemo } from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 import { QuestionRadioStatPropsType } from "./interface";
-import { Button, Input } from "antd";
-import { STAT_COLORS } from "../../../constant";
-//
 
-const data01 = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-];
+function format(value: number) {
+  return (value * 100).toFixed(2) + "%";
+}
 
 const StatComponent: FC<QuestionRadioStatPropsType> = ({ stat }) => {
+  const sum = useMemo(() => {
+    let s = 0;
+    stat.forEach((i) => (s += i.count));
+    return s;
+  }, [stat]);
   return (
     //用了ResponsiveContainer就无法显示饼图，不知为啥
     // <ResponsiveContainer width="100%" height="100%">
@@ -25,7 +24,7 @@ const StatComponent: FC<QuestionRadioStatPropsType> = ({ stat }) => {
         cy="50%"
         outerRadius={60}
         fill="#8884d8"
-        label={(i) => `${i.name}:${i.count}`}
+        label={(i) => `${i.name}:${format(i.count / sum)}`}
       />
     </PieChart>
     // </ResponsiveContainer>
