@@ -1,0 +1,24 @@
+.canvas {
+  min-height: 100%;
+  background-color: #fff;
+  overflow: hidden; //不在这一层滚动
+}
+
+.component-wrapper {
+  margin: 12px;
+  border: 1px solid #fff;
+  padding: 12px;
+  border-radius: 3px;
+  &:hover {
+    border-color: #d9d9d9;
+  }
+}
+
+.selected {
+  border-color: #1890ff !important; //用important避免与上面的hover冲突
+}
+
+.component {
+  pointer-events: none; //屏蔽鼠标行为不允许操作
+  opacity: 0.8;
+}

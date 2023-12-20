@@ -24,3 +24,7 @@ export const QuestionRadioDefaultProps: QuestionRadioPropsType = {
   ],
   value: "",
 };
+//新增统计组件的类型
+export type QuestionRadioStatPropsType = {
+  stat: Array<{ name: string; count: number }>;
+};
